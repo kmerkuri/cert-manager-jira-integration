@@ -1,0 +1,16 @@
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: cert-manager-webhook
+webhooks:
+- name: cert-manager-certificates.yourdomain.com
+  rules:
+  - apiGroups: ["cert-manager.io"]
+    apiVersions: ["v1"]
+    resources: ["certificates"]
+  failurePolicy: Fail
+  clientConfig:
+    service:
+      name: your-webhook-service-name
+      namespace: your-webhook-namespace
+      path: "/your-webhook-path"
+      caBundle: your-ca-bundle
