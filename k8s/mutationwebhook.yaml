@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+ name: cert-manager-webhook-notifications
+webhooks:
+- name: notifications.cert-manager.io
+  admissionReviewVersions: ["v1"]
+  clientConfig:
+    service:
+      name: notifications
+      namespace: cert-notificiations
+      path: "/webhook"
+      port: 443
+    caBundle: "<get if from ca.crt of the secret tls"
+  rules:
+    - operations: ["CREATE", "UPDATE"]
+      apiGroups:   ["cert-manager.io"]
+      apiVersions: ["v1"]
+      resources: ["certificates"]
+  sideEffects: None
+  timeoutSeconds: 10
