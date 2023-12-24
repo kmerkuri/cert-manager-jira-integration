@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications
+  namespace: cert-notificiations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notifications
+  template:
+    metadata:
+      labels:
+        app: notifications
+        env: dev
+    spec:
+      containers:
+        - name: notifications
+          image: kmerkuri/webhook:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+          - name: JIRA_SERVER
+            value: ""
+          - name: JIRA_USERNAME
+            value: ""
+          - name: JIRA_API_TOKEN
+            value: ""
+          - name: JIRA_PROJECT_KEY
+            value: ""
+          volumeMounts:
+            - name: tls
+              mountPath: /app/certs
+              readOnly: true
+      volumes:
+      - name: tls
+        secret:
+          secretName: test-certificate-secret
